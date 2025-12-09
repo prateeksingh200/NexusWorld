@@ -1,28 +1,38 @@
+/* src/main.css */
+
 /* 1. Define Priority Layers */
 @layer reset, foundations, components, utilities;
 
-/* 2. Import Foundations (Your Uploaded Files) */
+/* 2. Import Foundations */
 @import "foundations/color-tokens.css" layer(foundations);
 @import "foundations/typography-tokens.css" layer(foundations);
 
-/* 3. Import Components (The files above) */
+/* 3. Import Components */
 @import "components/density.css" layer(components);
 @import "components/buttons.css" layer(components);
 @import "components/inputs.css" layer(components);
 @import "components/icons.css" layer(components);
 @import "components/controls.css" layer(components);
 @import "components/accordion.css" layer(components);
+@import "components/modal.css" layer(components); /* Added Modal here */
+
+/* 4. Import Utilities */
 @import "components/utilities.css" layer(utilities);
 
-/* 4. Basic Reset */
-
+/* 5. Basic Reset */
 @layer reset {
-  /* ... keep your existing reset ... */
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  html {
+      /* Prevent layout shifts when scrollbar appears */
+      scrollbar-gutter: stable;
+  }
+
   body { 
-    font-family: var(--font-family-base);
+    font-family: var(--font-family-base, sans-serif);
     background-color: var(--color-background, #fff);
-    color: var(--color-text-main); 
+    color: var(--color-text-main, #000); 
     transition: background-color 0.3s, color 0.3s;
+    line-height: 1.5;
   }
 }

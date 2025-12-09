@@ -1,17 +1,8 @@
 /* src/js/nexus-icon-wc.js */
 
 class NexusIcon extends HTMLElement {
-    // Watch for changes to the 'name' attribute
     static get observedAttributes() {
         return ['name'];
-    }
-
-    constructor() {
-        super();
-    }
-
-    connectedCallback() {
-        this.render();
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -20,14 +11,23 @@ class NexusIcon extends HTMLElement {
         }
     }
 
+    connectedCallback() {
+        this.render();
+    }
+
     render() {
         const iconName = this.getAttribute('name');
-        
-        // If no name is provided, do nothing
         if (!iconName) return;
 
-        // We inject the SVG markup pointing to the sprite
-        // Note: Ensure the path 'dist/nexus-icons.svg' is correct relative to your HTML file
+        // 1. AUTOMATIC DETECTION
+        // If the filename ends with "-filled", switch to Filled Mode
+        if (iconName.includes('filled')) {
+            this.classList.add('nxs-variant-filled');
+        } else {
+            this.classList.remove('nxs-variant-filled');
+        }
+
+        // 2. Inject SVG
         this.innerHTML = `
             <svg class="nxs-icon" aria-hidden="true" focusable="false">
                 <use href="dist/nexus-icons.svg#${iconName}"></use>
@@ -36,7 +36,6 @@ class NexusIcon extends HTMLElement {
     }
 }
 
-// Register the web component
 if (!customElements.get('nxs-icon')) {
     customElements.define('nxs-icon', NexusIcon);
 }

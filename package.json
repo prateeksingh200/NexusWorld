@@ -4,8 +4,8 @@
     "scripts": {
         "build:css": "postcss src/main.css -o dist/nexus.min.css",
         "build:js": "esbuild src/js/main.js --bundle --minify --outfile=dist/nexus.bundle.js",
-        "//": "Run SVGO on the folder (-f) first, then bundle them",
-        "build:icons": "svgo -f src/icons && svgstore -o dist/nexus-icons.svg src/icons/*.svg",
+        "//": "Update: explicitly process both outline and filled folders",
+        "build:icons": "svgo -f src/icons/outline && svgo -f src/icons/filled && svgstore -o dist/nexus-icons.svg src/icons/outline/*.svg src/icons/filled/*.svg",
         "build": "npm run build:css && npm run build:js && npm run build:icons"
     },
     "devDependencies": {

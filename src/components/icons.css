@@ -1,23 +1,63 @@
 /* src/components/icons.css */
 
+/* --- 1. Base Container --- */
+nxs-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5em;
+  height: 1.5em;
+  line-height: 1;
+  color: inherit;
+  vertical-align: middle;
+}
+
+/* --- MODE A: OUTLINE (Default) --- */
+/* Target internal shapes: Paths, Circles, Rects, etc. */
+nxs-icon svg *,
+nxs-icon symbol * {
+  /* Force OUTLINE styling */
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 2px !important;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: all 0.2s ease;
+}
+
+/* --- MODE B: FILLED (Variant) --- */
+/* When the component has the 'filled' class, flip the logic */
+nxs-icon.nxs-variant-filled svg *,
+nxs-icon.nxs-variant-filled symbol * {
+  /* Force SOLID styling */
+  fill: currentColor !important;
+  stroke: none !important; /* Remove the outline border */
+}
+
 /* --- 1. Base Styles & Web Component Fix --- */
 nxs-icon {
-  display: inline-flex;       /* Behave like an icon, not a text span */
-  align-items: center;        /* Center the internal SVG vertically */
-  justify-content: center;    /* Center the internal SVG horizontally */
-  vertical-align: middle;     /* Align with surrounding text */
-  line-height: 1;             /* Reset line-height to tightest fit */
+  display: inline-flex;       
+  align-items: center;        
+  justify-content: center;    
+  vertical-align: middle;     
+  line-height: 1;             
   
   /* Default Size */
   width: 1.5em;
   height: 1.5em;
 
-  /* Inherit Color from parent */
-  color: inherit; 
-  fill: currentColor;
+  /* --- CRITICAL FIX FOR OUTLINE ICONS --- */
+  /* Do not fill the shape */
+  fill: none; 
+  
+  /* Color the lines instead */
+  stroke: currentColor;
+  stroke-width: 2px;        /* Enforce a consistent line weight */
+  stroke-linecap: round;    /* Makes line ends rounded */
+  stroke-linejoin: round;   /* Makes corners rounded */
   
   /* Transitions */
-  transition: color 0.2s ease, width 0.2s ease, height 0.2s ease;
+  transition: stroke 0.2s ease, width 0.2s ease, height 0.2s ease;
 }
 
 /* Legacy SVG Class Support */
@@ -26,9 +66,16 @@ nxs-icon {
   vertical-align: middle;
   width: 1.5em;
   height: 1.5em;
-  fill: currentColor;
-  transition: fill 0.2s ease;
+  
+  /* Match the Web Component styles */
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  
   flex-shrink: 0;
+  transition: stroke 0.2s ease;
 }
 
 /* --- 2. System State Colors --- */

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexus UI: Icon Library</title>
     
-    <link rel="stylesheet" href="dist/nexus.min.css">
+    <link rel="stylesheet" href="src/main.css">
     
     <style>
         /* --- Page Specific Styles --- */
@@ -13,9 +13,6 @@
             padding: 2rem;
             max-width: 1200px;
             margin: 0 auto;
-            background-color: var(--color-background);
-            color: var(--color-text-main);
-            font-family: var(--font-family-base, sans-serif);
         }
 
         /* Header */
@@ -34,18 +31,20 @@
         .toolbar {
             display: flex;
             gap: 1.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
             padding: 1rem;
             background: var(--color-surface);
+            border: 1px solid var(--color-border);
             border-radius: 8px;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         /* The Grid Layout */
         .icon-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 2rem; /* Space between icons */
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 2rem 1rem; /* Row gap, Col gap */
         }
 
         /* Individual Icon Wrapper */
@@ -53,27 +52,47 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             text-align: center;
-            /* NO BORDERS or BACKGROUNDS as requested */
+            /* No borders or background as requested */
             background: transparent;
             padding: 0.5rem;
+            cursor: pointer;
             transition: transform 0.2s ease, color 0.2s ease;
         }
 
         .icon-item:hover {
-            transform: translateY(-3px); /* Subtle lift on hover */
+            transform: translateY(-3px);
             color: var(--color-primary-600);
         }
 
         /* Icon Name Label */
         .icon-label {
-            margin-top: 0.75rem;
+            margin-top: 1rem;
             font-family: monospace; /* Mono font */
             font-size: 0.75rem;
             color: var(--color-text-muted);
             word-wrap: break-word;
             max-width: 100%;
+            line-height: 1.2;
+        }
+
+        /* Modal Preview specific styles */
+        .preview-row {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        .preview-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            min-width: 100px;
         }
     </style>
 </head>
@@ -83,41 +102,79 @@
         <div>
             <h1>Icon Gallery</h1>
             <p style="color: var(--color-text-muted); margin-top: 0.5rem;">
-                Source: <code>src/icons/</code>
+                Source: <code>src/icons/</code> (Outline & Filled)
             </p>
         </div>
         <a href="index.html" class="nxs-btn nxs-btn-sm nxs-btn-secondary">Back to Home</a>
     </header>
 
     <div class="toolbar">
-        <label class="nxs-label" style="margin:0;">Preview Size:</label>
-        <select id="sizeSelect" class="nxs-input nxs-input-sm" style="width: auto;">
-            <option value="nxs-icon-xs">XS (12px)</option>
-            <option value="nxs-icon-sm">SM (16px)</option>
-            <option value="nxs-icon-md" selected>MD (24px)</option>
-            <option value="nxs-icon-lg">LG (32px)</option>
-            <option value="nxs-icon-xl">XL (48px)</option>
-        </select>
+        <div style="border-right: 1px solid var(--color-border); padding-right: 1.5rem;">
+            <label class="nxs-label" style="margin:0;">Icon Style:</label>
+            <select id="styleSelect" class="nxs-input nxs-input-sm" style="font-weight: bold;">
+                <option value="outline">Outline</option>
+                <option value="filled">Filled</option>
+            </select>
+        </div>
 
-        <label class="nxs-label" style="margin:0; margin-left: 1rem;">Color Context:</label>
-        <select id="colorSelect" class="nxs-input nxs-input-sm" style="width: auto;">
-            <option value="">Default (CurrentColor)</option>
-            <option value="nxs-icon-success">Success</option>
-            <option value="nxs-icon-warning">Warning</option>
-            <option value="nxs-icon-error">Error</option>
-            <option value="nxs-icon-info">Info</option>
-        </select>
+        <div>
+            <label class="nxs-label" style="margin:0;">Size:</label>
+            <select id="sizeSelect" class="nxs-input nxs-input-sm">
+                <option value="nxs-icon-xs">XS</option>
+                <option value="nxs-icon-sm">SM</option>
+                <option value="nxs-icon-md" selected>MD</option>
+                <option value="nxs-icon-lg">LG</option>
+                <option value="nxs-icon-xl">XL</option>
+            </select>
+        </div>
+
+        <div>
+            <label class="nxs-label" style="margin:0;">Context:</label>
+            <select id="colorSelect" class="nxs-input nxs-input-sm">
+                <option value="">Default</option>
+                <option value="nxs-icon-success">Success</option>
+                <option value="nxs-icon-warning">Warning</option>
+                <option value="nxs-icon-error">Error</option>
+                <option value="nxs-icon-info">Info</option>
+            </select>
+        </div>
     </div>
 
     <div id="grid" class="icon-grid"></div>
 
+    <div class="modal-overlay" id="iconModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle" style="margin:0;">Icon Name</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            
+            <div class="preview-row">
+                <div class="preview-box">
+                    <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--color-text-muted);">Outline</span>
+                    <nxs-icon id="modalIconOutline" class="nxs-icon-xl"></nxs-icon>
+                    <code style="font-size: 0.75rem; color: var(--color-primary-600);">name="..."</code>
+                </div>
+                
+                <div class="preview-box">
+                    <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--color-text-muted);">Filled</span>
+                    <nxs-icon id="modalIconFilled" class="nxs-icon-xl"></nxs-icon>
+                    <code style="font-size: 0.75rem; color: var(--color-primary-600);">name="...-filled"</code>
+                </div>
+            </div>
+
+            <div class="modal-footer" style="justify-content: center;">
+                <button class="nxs-btn nxs-btn-sm modal-close">Close</button>
+            </div>
+        </div>
+    </div>
+
     <script src="src/js/nexus-icon-wc.js"></script>
+    <script src="src/js/components/modal.js"></script>
 
     <script>
-        // Generated list based on your file tree
-        // Note: I have corrected likely typos (e.g., 'loin' -> 'log-in')
-        // Please rename your actual files in src/icons/ to match these IDs.
-        const icons = [
+        // List of Base Icon Names (from your 'outline' folder)
+        const baseIcons = [
             "ai-summary-doc",
             "alert-triangle",
             "arrow-down",
@@ -128,15 +185,15 @@
             "chevron-down",
             "chevron-left",
             "chevron-right",
-            "chevron-up",       /* Rename 'chevron-up copy.svg' to this */
+            "chevron-up",
             "client-business",
             "client-finance",
             "client-tag",
             "inbox",
             "info",
             "lock",
-            "log-in",           /* Rename 'loin.svg' to this */
-            "log-out",          /* Rename 'loout.svg' to this */
+            "log-in",
+            "log-out",
             "plus",
             "search",
             "settings",
@@ -155,42 +212,72 @@
         ];
 
         const grid = document.getElementById('grid');
+        const styleSelect = document.getElementById('styleSelect');
         const sizeSelect = document.getElementById('sizeSelect');
         const colorSelect = document.getElementById('colorSelect');
 
+        // --- RENDER FUNCTION ---
         function render() {
+            const isFilledMode = styleSelect.value === 'filled';
+            
             // Sort alphabetically
-            icons.sort();
+            baseIcons.sort();
 
-            grid.innerHTML = icons.map(name => `
-                <div class="icon-item">
-                    <nxs-icon name="${name}" class="target-icon nxs-icon-md"></nxs-icon>
+            grid.innerHTML = baseIcons.map(name => {
+                // If filled mode is selected, append '-filled'
+                // Note: If the filled icon doesn't exist in the file system, it will show blank.
+                const displayIconName = isFilledMode ? `${name}-filled` : name;
+                
+                return `
+                <div class="icon-item" onclick="showIconDetails('${name}')">
+                    <nxs-icon name="${displayIconName}" class="target-icon nxs-icon-md"></nxs-icon>
                     <span class="icon-label">${name}</span>
                 </div>
-            `).join('');
+            `}).join('');
+
+            // Apply size/color filters immediately after render
+            updateStyles();
         }
 
+        // --- STYLE UPDATE FUNCTION ---
         function updateStyles() {
             const allIcons = document.querySelectorAll('.target-icon');
             const size = sizeSelect.value;
             const color = colorSelect.value;
 
             allIcons.forEach(icon => {
-                // Remove all modifier classes first
-                icon.classList.remove(
-                    'nxs-icon-xs', 'nxs-icon-sm', 'nxs-icon-md', 'nxs-icon-lg', 'nxs-icon-xl',
-                    'nxs-icon-success', 'nxs-icon-warning', 'nxs-icon-error', 'nxs-icon-info'
-                );
-                // Add selected classes
-                if(size) icon.classList.add(size);
-                if(color) icon.classList.add(color);
+                // Reset class list to base
+                icon.className = 'target-icon'; 
+                
+                // Add modifiers
+                if (size) icon.classList.add(size);
+                if (color) icon.classList.add(color);
             });
         }
 
+        // --- MODAL TRIGGER ---
+        function showIconDetails(baseName) {
+            // Update Title
+            document.getElementById('modalTitle').textContent = baseName;
+            
+            // Set Outline Preview
+            const outlineIcon = document.getElementById('modalIconOutline');
+            outlineIcon.setAttribute('name', baseName);
+            
+            // Set Filled Preview
+            const filledIcon = document.getElementById('modalIconFilled');
+            filledIcon.setAttribute('name', baseName + '-filled');
+            
+            // Open Modal using the Global NexusModal Object
+            NexusModal.open('iconModal');
+        }
+
+        // Event Listeners
+        styleSelect.addEventListener('change', render);
         sizeSelect.addEventListener('change', updateStyles);
         colorSelect.addEventListener('change', updateStyles);
 
-        // Run
+        // Initial Load
         render();
     </script>
 </body>

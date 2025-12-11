@@ -1,31 +1,21 @@
-// svgo.config.js
 module.exports = {
   plugins: [
-    // 1. Load the default preset
     {
       name: 'preset-default',
       params: {
         overrides: {
-          // If you see errors about other plugins not being in preset-default,
-          // move them out like we did for removeViewBox below.
-          removeUnknownsAndDefaults: false,
+          // IMPORTANT: Keep the viewBox so icons can scale via CSS
+          removeViewBox: false,
         },
       },
     },
-    
-    // 2. Configure removeViewBox separately (OUTSIDE the preset)
-    // We set active: false because we want to KEEP the viewBox for scaling.
+    // Removes the 'fill' attribute so we can control color with CSS
+    'removeDimensions',
     {
-      name: 'removeViewBox',
-      active: false,
-    },
-
-    // 3. Remove inline styles to prevent conflicts with your CSS
-    {
-      name: 'removeAttrs',
-      params: {
-        attrs: '(style)',
-      },
-    },
+        name: 'removeAttrs',
+        params: {
+            attrs: '(fill|stroke)'
+        }
+    }
   ],
 };

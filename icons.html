@@ -1,284 +1,250 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus UI: Icon Library</title>
+    <title>Nexus Icons Library</title>
     
-    <link rel="stylesheet" href="src/main.css">
-    
+    <link rel="stylesheet" href="dist/nexus.min.css">
+    <link rel="stylesheet" href="src/components/icons.css">
+
     <style>
-        /* --- Page Specific Styles --- */
-        body {
-            padding: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* Header */
-        header {
-            margin-bottom: 3rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--color-border);
+        /* --- Tool Bar Styles (Local to this showcase) --- */
+        .nexus-toolbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--color-surface, #fff);
+            border-bottom: 1px solid var(--color-grays-200, #eee);
+            padding: 1rem 2rem;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-        }
-
-        h1 { margin: 0; font-size: 1.5rem; }
-
-        /* Controls Toolbar */
-        .toolbar {
-            display: flex;
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-            padding: 1rem;
-            background: var(--color-surface);
-            border: 1px solid var(--color-border);
-            border-radius: 8px;
-            align-items: center;
+            gap: 3rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
             flex-wrap: wrap;
         }
 
-        /* The Grid Layout */
-        .icon-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-            gap: 2rem 1rem; /* Row gap, Col gap */
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
-        /* Individual Icon Wrapper */
-        .icon-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            text-align: center;
-            /* No borders or background as requested */
-            background: transparent;
-            padding: 0.5rem;
+        .toolbar-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--color-grays-600, #666);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Controls */
+        .nexus-select {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--color-grays-300, #ccc);
+            border-radius: 4px;
+            font-size: 1rem;
             cursor: pointer;
-            transition: transform 0.2s ease, color 0.2s ease;
         }
 
-        .icon-item:hover {
-            transform: translateY(-3px);
-            color: var(--color-primary-600);
-        }
-
-        /* Icon Name Label */
-        .icon-label {
-            margin-top: 1rem;
-            font-family: monospace; /* Mono font */
-            font-size: 0.75rem;
-            color: var(--color-text-muted);
-            word-wrap: break-word;
-            max-width: 100%;
-            line-height: 1.2;
-        }
-
-        /* Modal Preview specific styles */
-        .preview-row {
+        /* Size Toggles */
+        .size-options {
             display: flex;
-            gap: 2rem;
-            justify-content: center;
-            margin-top: 1rem;
+            background: var(--color-grays-100, #f4f5f6);
+            padding: 4px;
+            border-radius: 6px;
         }
-        .preview-box {
+
+        .size-option {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--color-grays-600);
+            user-select: none;
+            transition: all 0.2s;
+        }
+
+        .size-option.active {
+            background: white;
+            color: var(--color-primary-600, #000);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* Color Swatches */
+        .color-options {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 1rem;
-            border: 1px solid var(--color-border);
-            border-radius: 8px;
-            min-width: 100px;
+            gap: 0.75rem;
+        }
+
+        .color-swatch {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+            border: 2px solid transparent;
+            transition: transform 0.2s;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.1);
+        }
+
+        .color-swatch.active {
+            border-color: var(--color-grays-800, #333);
+            box-shadow: 0 0 0 2px white inset; /* Creates a gap between border and color */
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div>
-            <h1>Icon Gallery</h1>
-            <p style="color: var(--color-text-muted); margin-top: 0.5rem;">
-                Source: <code>src/icons/</code> (Outline & Filled)
-            </p>
-        </div>
-        <a href="index.html" class="nxs-btn nxs-btn-sm nxs-btn-secondary">Back to Home</a>
-    </header>
-
-    <div class="toolbar">
-        <div style="border-right: 1px solid var(--color-border); padding-right: 1.5rem;">
-            <label class="nxs-label" style="margin:0;">Icon Style:</label>
-            <select id="styleSelect" class="nxs-input nxs-input-sm" style="font-weight: bold;">
+    <header class="nexus-toolbar">
+        
+        <div class="toolbar-group">
+            <label class="toolbar-label">Type</label>
+            <select id="type-select" class="nexus-select">
                 <option value="outline">Outline</option>
                 <option value="filled">Filled</option>
             </select>
         </div>
 
-        <div>
-            <label class="nxs-label" style="margin:0;">Size:</label>
-            <select id="sizeSelect" class="nxs-input nxs-input-sm">
-                <option value="nxs-icon-xs">XS</option>
-                <option value="nxs-icon-sm">SM</option>
-                <option value="nxs-icon-md" selected>MD</option>
-                <option value="nxs-icon-lg">LG</option>
-                <option value="nxs-icon-xl">XL</option>
-            </select>
-        </div>
-
-        <div>
-            <label class="nxs-label" style="margin:0;">Context:</label>
-            <select id="colorSelect" class="nxs-input nxs-input-sm">
-                <option value="">Default</option>
-                <option value="nxs-icon-success">Success</option>
-                <option value="nxs-icon-warning">Warning</option>
-                <option value="nxs-icon-error">Error</option>
-                <option value="nxs-icon-info">Info</option>
-            </select>
-        </div>
-    </div>
-
-    <div id="grid" class="icon-grid"></div>
-
-    <div class="modal-overlay" id="iconModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalTitle" style="margin:0;">Icon Name</h2>
-                <button class="modal-close">&times;</button>
-            </div>
-            
-            <div class="preview-row">
-                <div class="preview-box">
-                    <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--color-text-muted);">Outline</span>
-                    <nxs-icon id="modalIconOutline" class="nxs-icon-xl"></nxs-icon>
-                    <code style="font-size: 0.75rem; color: var(--color-primary-600);">name="..."</code>
-                </div>
-                
-                <div class="preview-box">
-                    <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--color-text-muted);">Filled</span>
-                    <nxs-icon id="modalIconFilled" class="nxs-icon-xl"></nxs-icon>
-                    <code style="font-size: 0.75rem; color: var(--color-primary-600);">name="...-filled"</code>
-                </div>
-            </div>
-
-            <div class="modal-footer" style="justify-content: center;">
-                <button class="nxs-btn nxs-btn-sm modal-close">Close</button>
+        <div class="toolbar-group">
+            <label class="toolbar-label">Size</label>
+            <div class="size-options" id="size-options">
+                <div class="size-option" data-value="16px">XS</div>
+                <div class="size-option active" data-value="var(--nxs-size-sm, 32px)">SM</div>
+                <div class="size-option" data-value="var(--nxs-size-md, 40px)">MD</div>
+                <div class="size-option" data-value="var(--nxs-size-lg, 48px)">LG</div>
+                <div class="size-option" data-value="var(--nxs-size-xl, 64px)">XL</div>
             </div>
         </div>
-    </div>
 
-    <script src="src/js/nexus-icon-wc.js"></script>
-    <script src="src/js/components/modal.js"></script>
+        <div class="toolbar-group">
+            <label class="toolbar-label">Color</label>
+            <div class="color-options" id="color-options">
+                <div class="color-swatch active" data-color="var(--color-grays-900)" style="background: #333;" title="Neutral"></div>
+                <div class="color-swatch" data-color="var(--color-error-500)" style="background: #C62828;" title="Error"></div>
+                <div class="color-swatch" data-color="var(--color-warning-500)" style="background: #F57C00;" title="Warning"></div>
+                <div class="color-swatch" data-color="var(--color-success-500)" style="background: #4CAF50;" title="Success"></div>
+                <div class="color-swatch" data-color="var(--color-information-500)" style="background: #2196F3;" title="Information"></div>
+            </div>
+        </div>
+
+    </header>
+
+    <main class="nexus-icon-showcase">
+        <h1 id="grid-title">Nexus Icons</h1>
+        <p style="margin-bottom: 2rem; color: #666;">Click any icon to copy its code.</p>
+
+        <div class="nexus-icon-grid" id="icon-grid">
+            </div>
+    </main>
+
+    <script src="src/js/icons/nexus-icon-wc.js"></script>
 
     <script>
-        // List of Base Icon Names (from your 'outline' folder)
-        const baseIcons = [
-            "ai-summary-doc",
-            "alert-triangle",
-            "arrow-down",
-            "arrow-left",
-            "arrow-right",
-            "arrow-up",
-            "check-circle",
-            "chevron-down",
-            "chevron-left",
-            "chevron-right",
-            "chevron-up",
-            "client-business",
-            "client-finance",
-            "client-tag",
-            "inbox",
-            "info",
-            "lock",
-            "log-in",
-            "log-out",
-            "plus",
-            "search",
-            "settings",
-            "sliders",
-            "trash",
-            "user",
-            "users",
-            "user-check",
-            "user-circle",
-            "user-cog",
-            "user-lock",
-            "user-minus",
-            "user-plus",
-            "user-x",
-            "x-circle"
+        // --- 1. Data Source ---
+        const iconList = [
+            "ai-summary-doc", "alert-triangle", "arrow-down", "arrow-left",
+            "arrow-right", "arrow-up", "check-circle", "chevron-down",
+            "chevron-left", "chevron-right", "chevron-up", "client-business",
+            "client-finance", "client-tag", "inbox", "info", "lock", "log-in",
+            "log-out", "plus", "search", "settings", "sliders", "trash",
+            "user", "user-check", "user-circle", "user-cog", "user-lock",
+            "user-minus", "user-plus", "user-x", "users", "x-circle"
         ];
 
-        const grid = document.getElementById('grid');
-        const styleSelect = document.getElementById('styleSelect');
-        const sizeSelect = document.getElementById('sizeSelect');
-        const colorSelect = document.getElementById('colorSelect');
+        // --- 2. State Management ---
+        const state = {
+            type: 'outline',
+            size: 'var(--nxs-size-sm, 32px)', // Default to SM
+            color: 'var(--color-grays-900)'   // Default to Neutral
+        };
 
-        // --- RENDER FUNCTION ---
-        function render() {
-            const isFilledMode = styleSelect.value === 'filled';
-            
-            // Sort alphabetically
-            baseIcons.sort();
+        // --- 3. DOM Elements ---
+        const grid = document.getElementById('icon-grid');
+        const typeSelect = document.getElementById('type-select');
+        const sizeOptions = document.querySelectorAll('.size-option');
+        const colorOptions = document.querySelectorAll('.color-swatch');
 
-            grid.innerHTML = baseIcons.map(name => {
-                // If filled mode is selected, append '-filled'
-                // Note: If the filled icon doesn't exist in the file system, it will show blank.
-                const displayIconName = isFilledMode ? `${name}-filled` : name;
-                
-                return `
-                <div class="icon-item" onclick="showIconDetails('${name}')">
-                    <nxs-icon name="${displayIconName}" class="target-icon nxs-icon-md"></nxs-icon>
-                    <span class="icon-label">${name}</span>
-                </div>
-            `}).join('');
+        // --- 4. Render Function ---
+        function renderGrid() {
+            grid.innerHTML = ''; // Clear current grid
 
-            // Apply size/color filters immediately after render
-            updateStyles();
-        }
+            iconList.forEach(name => {
+                const card = document.createElement('div');
+                card.className = 'nexus-icon-card';
+                // Apply color state to the card wrapper (icons inherit via currentColor)
+                card.style.color = state.color;
 
-        // --- STYLE UPDATE FUNCTION ---
-        function updateStyles() {
-            const allIcons = document.querySelectorAll('.target-icon');
-            const size = sizeSelect.value;
-            const color = colorSelect.value;
+                const usageString = `<nexus-icon name="${name}" type="${state.type}"></nexus-icon>`;
 
-            allIcons.forEach(icon => {
-                // Reset class list to base
-                icon.className = 'target-icon'; 
-                
-                // Add modifiers
-                if (size) icon.classList.add(size);
-                if (color) icon.classList.add(color);
+                // Create the icon with inline styles for dynamic sizing
+                // Note: We deliberately override the default CSS size here based on toolbar selection
+                card.innerHTML = `
+                    <nexus-icon 
+                        name="${name}" 
+                        type="${state.type}" 
+                        style="width: ${state.size}; height: ${state.size}; font-size: ${state.size};"
+                    ></nexus-icon>
+                    <span class="nexus-icon-name">${name}</span>
+                `;
+
+                // Click to Copy
+                card.addEventListener('click', () => {
+                    navigator.clipboard.writeText(usageString);
+                    // Simple visual feedback
+                    const originalText = card.querySelector('.nexus-icon-name').innerText;
+                    card.querySelector('.nexus-icon-name').innerText = "Copied!";
+                    setTimeout(() => {
+                        card.querySelector('.nexus-icon-name').innerText = originalText;
+                    }, 1000);
+                });
+
+                grid.appendChild(card);
             });
         }
 
-        // --- MODAL TRIGGER ---
-        function showIconDetails(baseName) {
-            // Update Title
-            document.getElementById('modalTitle').textContent = baseName;
-            
-            // Set Outline Preview
-            const outlineIcon = document.getElementById('modalIconOutline');
-            outlineIcon.setAttribute('name', baseName);
-            
-            // Set Filled Preview
-            const filledIcon = document.getElementById('modalIconFilled');
-            filledIcon.setAttribute('name', baseName + '-filled');
-            
-            // Open Modal using the Global NexusModal Object
-            NexusModal.open('iconModal');
-        }
+        // --- 5. Event Listeners ---
 
-        // Event Listeners
-        styleSelect.addEventListener('change', render);
-        sizeSelect.addEventListener('change', updateStyles);
-        colorSelect.addEventListener('change', updateStyles);
+        // Type Change
+        typeSelect.addEventListener('change', (e) => {
+            state.type = e.target.value;
+            renderGrid();
+        });
 
-        // Initial Load
-        render();
+        // Size Change
+        sizeOptions.forEach(opt => {
+            opt.addEventListener('click', () => {
+                // UI Toggle
+                sizeOptions.forEach(o => o.classList.remove('active'));
+                opt.classList.add('active');
+                
+                // State Update
+                state.size = opt.dataset.value;
+                renderGrid();
+            });
+        });
+
+        // Color Change
+        colorOptions.forEach(opt => {
+            opt.addEventListener('click', () => {
+                // UI Toggle
+                colorOptions.forEach(o => o.classList.remove('active'));
+                opt.classList.add('active');
+                
+                // State Update
+                state.color = opt.dataset.color;
+                renderGrid();
+            });
+        });
+
+        // --- 6. Initial Render ---
+        renderGrid();
+
     </script>
 </body>
 </html>

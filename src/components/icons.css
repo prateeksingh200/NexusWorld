@@ -1,203 +1,72 @@
 /* src/components/icons.css */
 
-/* --- 1. Base Container --- */
-nxs-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.5em;
-  height: 1.5em;
-  line-height: 1;
-  color: inherit;
-  vertical-align: middle;
+/* --- Container & Typography --- */
+.nexus-icon-showcase {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: system-ui, -apple-system, sans-serif;
+    color: #333;
 }
 
-/* --- MODE A: OUTLINE (Default) --- */
-/* Target internal shapes: Paths, Circles, Rects, etc. */
-nxs-icon svg *,
-nxs-icon symbol * {
-  /* Force OUTLINE styling */
-  fill: none !important;
-  stroke: currentColor !important;
-  stroke-width: 2px !important;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  transition: all 0.2s ease;
+.nexus-icon-category-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 2rem 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #ddd;
+    text-transform: capitalize;
 }
 
-/* --- MODE B: FILLED (Variant) --- */
-/* When the component has the 'filled' class, flip the logic */
-nxs-icon.nxs-variant-filled svg *,
-nxs-icon.nxs-variant-filled symbol * {
-  /* Force SOLID styling */
-  fill: currentColor !important;
-  stroke: none !important; /* Remove the outline border */
+/* --- The Grid Layout --- */
+.nexus-icon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 2rem;
 }
 
-/* --- 1. Base Styles & Web Component Fix --- */
-nxs-icon {
-  display: inline-flex;       
-  align-items: center;        
-  justify-content: center;    
-  vertical-align: middle;     
-  line-height: 1;             
-  
-  /* Default Size */
-  width: 1.5em;
-  height: 1.5em;
-
-  /* --- CRITICAL FIX FOR OUTLINE ICONS --- */
-  /* Do not fill the shape */
-  fill: none; 
-  
-  /* Color the lines instead */
-  stroke: currentColor;
-  stroke-width: 2px;        /* Enforce a consistent line weight */
-  stroke-linecap: round;    /* Makes line ends rounded */
-  stroke-linejoin: round;   /* Makes corners rounded */
-  
-  /* Transitions */
-  transition: stroke 0.2s ease, width 0.2s ease, height 0.2s ease;
+/* --- The Icon Card --- */
+.nexus-icon-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1rem 0.5rem;
+    transition: color 0.2s ease;
 }
 
-/* Legacy SVG Class Support */
-.nxs-icon {
-  display: inline-block;
-  vertical-align: middle;
-  width: 1.5em;
-  height: 1.5em;
-  
-  /* Match the Web Component styles */
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2px;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  
-  flex-shrink: 0;
-  transition: stroke 0.2s ease;
+.nexus-icon-card:hover {
+    color: #2563eb; /* Brand color on hover */
+    cursor: pointer;
 }
 
-/* --- 2. System State Colors --- */
-/* Mapping to your color-tokens.css variables */
-
-.nxs-icon-success {
-  color: var(--color-success-600); /* #449E48 */
+/* --- Nexus Icon Component Styles --- */
+nexus-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Default size */
+    width: 32px;
+    height: 32px;
+    margin-bottom: 0.75rem;
 }
 
-.nxs-icon-warning {
-  color: var(--color-warning-500); /* #F57C00 */
+/* Ensure SVG fills the container */
+nexus-icon svg {
+    width: 100%;
+    height: 100%;
+    /* REMOVED: fill: currentColor; -> Handled by JS now */
 }
 
-.nxs-icon-error {
-  color: var(--color-error-600);   /* #B22424 */
+/* Filename text */
+.nexus-icon-name {
+    font-size: 0.75rem;
+    color: #666;
+    word-break: break-word;
 }
 
-.nxs-icon-info {
-  color: var(--color-information-600); /* #1E87DB */
-}
-
-/* Disabled State */
-.nxs-icon-disabled,
-nxs-icon[disabled] {
-  color: var(--color-grays-300);   /* #A9B3BC - Muted gray from your tokens */
-  cursor: not-allowed;
-  opacity: 0.8;
-}
-
-/* --- 3. Contextual Sizing --- */
-
-/* XS: Inline with helper text (approx 12px) */
-.nxs-icon-xs {
-  width: 0.75rem;
-  height: 0.75rem;
-}
-
-/* SM: Dense lists / small buttons (approx 16px) */
-.nxs-icon-sm {
-  width: 1rem;
-  height: 1rem;
-}
-
-/* MD: Default (approx 24px) */
-.nxs-icon-md {
-  width: 1.5rem;
-  height: 1.5rem;
-}
-
-/* LG: Card headers / Main actions (approx 32px) */
-.nxs-icon-lg {
-  width: 2rem;
-  height: 2rem;
-}
-
-/* XL: Modal Popups / Empty States (approx 48px) */
-.nxs-icon-xl {
-  width: 3rem;
-  height: 3rem;
-}
-
-/* --- 4. Icon Button Component --- */
-.nxs-btn-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  
-  /* Default Dimensions */
-  height: var(--nxs-size-md, 2.5rem); 
-  width: var(--nxs-size-md, 2.5rem);
-  
-  border-radius: var(--nxs-radius, 4px);
-  border: 1px solid var(--color-border); /* Uses semantic token */
-  background: transparent;
-  color: var(--color-grays-700);         /* #4E5A65 */
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-/* Ensure the icon INSIDE the button remains visually balanced */
-.nxs-btn-icon nxs-icon,
-.nxs-btn-icon .nxs-icon {
-    width: 1.25rem;
-    height: 1.25rem;
-}
-
-/* Button Size Modifiers */
-.nxs-btn-sm.nxs-btn-icon { 
-    height: var(--nxs-size-sm, 2rem); 
-    width: var(--nxs-size-sm, 2rem); 
-}
-.nxs-btn-lg.nxs-btn-icon { 
-    height: var(--nxs-size-lg, 3rem); 
-    width: var(--nxs-size-lg, 3rem); 
-}
-
-/* Interactive States */
-.nxs-btn-icon:hover {
-  background-color: var(--color-primary-50);  /* #E8F3F3 - Subtle primary tint */
-  color: var(--color-primary-600);            /* #157A7A - Primary Brand Color */
-  border-color: var(--color-primary-200);     /* #A2CFCF */
-}
-
-.nxs-btn-icon:active {
-  background-color: var(--color-primary-100); /* #D1E7E7 */
-}
-
-/* Disabled Button */
-.nxs-btn-icon:disabled {
-  color: var(--color-grays-300);              /* #A9B3BC */
-  border-color: var(--color-grays-200);       /* #CDD3D8 */
-  background-color: transparent;
-  cursor: not-allowed;
-}
-
-/* Dark Mode Overrides (Semantic tokens handle most, but specific overrides here) */
-[data-theme="dark"] .nxs-btn-icon { 
-    color: var(--color-grays-200); 
-    border-color: var(--color-grays-600); 
-}
-[data-theme="dark"] .nxs-btn-icon:hover {
-    background-color: var(--color-grays-800);
-    color: var(--color-primary-300);          /* Lighter primary for dark mode */
-    border-color: var(--color-primary-500);
+.nexus-icon-card:hover .nexus-icon-name {
+    color: inherit;
 }

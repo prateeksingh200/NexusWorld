@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Nexus Table Experiment</title>
+
+        <link rel="stylesheet" href="src/foundations/color-tokens.css" />
+        <link rel="stylesheet" href="src/foundations/typography-tokens.css" />
+    </head>
+    <body style="padding: 2rem; background: #f4f4f4">
+        <h2>1. Auto-Discovered Table (JSON)</h2>
+        <nexus-table id="simple-table"></nexus-table>
+
+        <br />
+        <hr />
+        <br />
+
+        <h2>2. Configured Table (Presets + Custom Widths)</h2>
+        <nexus-table id="styled-table" preset="striped compact"></nexus-table>
+
+        <br />
+        <hr />
+        <br />
+
+        <h2>4. Visual Formatting (Badges, Currency, & Alignment)</h2>
+        <nexus-table id="visual-table" preset="striped"></nexus-table>
+
+        <br />
+        <hr />
+        <br />
+
+        <h2>5. Interactive (Sort & Filter)</h2>
+
+        <div style="margin-bottom: 1rem">
+            <input
+                type="text"
+                id="table-search"
+                placeholder="Search table..."
+                style="
+                    padding: 0.5rem;
+                    width: 100%;
+                    max-width: 300px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                "
+            />
+        </div>
+
+        <nexus-table id="interactive-table" preset="striped"></nexus-table>
+
+        <br />
+        <hr />
+        <br />
+
+        <h2>Expense Report (Nested Table Pattern)</h2>
+
+        <nexus-table id="expense-report"></nexus-table>
+
+        <script type="module">
+            import { NexusTable } from "./src/js/components/nexus-table-wc.js";
+
+            // --- Test Case 1: Simple JSON Data ---
+            const table1 = document.getElementById("simple-table");
+            table1.data = [
+                {
+                    id: 101,
+                    name: "Alice Johnson",
+                    role: "Designer",
+                    status: "Active",
+                },
+                {
+                    id: 102,
+                    name: "Bob Smith",
+                    role: "Developer",
+                    status: "Offline",
+                },
+                {
+                    id: 103,
+                    name: "Charlie Brown",
+                    role: "Manager",
+                    status: "Active",
+                },
+            ];
+
+            // --- Test Case 2: Configured Columns ---
+            const table2 = document.getElementById("styled-table");
+
+            // Define exact widths
+            table2.columns = [
+                { key: "id", title: "ID", width: "50px" },
+                { key: "task", title: "Task Name", width: "3fr" },
+                { key: "priority", title: "Priority", width: "100px" },
+            ];
+
+            table2.data = [
+                { id: 1, task: "Fix Login Bug", priority: "High" },
+                { id: 2, task: "Update Documentation", priority: "Low" },
+                { id: 3, task: "Design System Audit", priority: "Medium" },
+            ];
+
+            // --- Test Case 4: Formatting ---
+            const table4 = document.getElementById("visual-table");
+
+            table4.columns = [
+                { key: "item", title: "Product Name", width: "2fr" },
+                {
+                    key: "amount",
+                    title: "Price",
+                    width: "100px",
+                    align: "right", // Right align numbers
+                    type: "currency",
+                },
+                {
+                    key: "status",
+                    title: "Status",
+                    width: "120px",
+                    align: "center",
+                    type: "badge", // Auto-badge
+                },
+                {
+                    key: "processed_at",
+                    title: "Date",
+                    width: "120px",
+                    type: "date",
+                },
+            ];
+
+            table4.data = [
+                {
+                    item: "Website Redesign",
+                    amount: 4500,
+                    status: "Paid",
+                    processed_at: "2023-12-01",
+                },
+                {
+                    item: "Logo Design",
+                    amount: 850,
+                    status: "Pending",
+                    processed_at: "2023-12-05",
+                },
+                {
+                    item: "Hosting Setup",
+                    amount: 120,
+                    status: "Failed",
+                    processed_at: "2023-12-08",
+                },
+            ];
+
+            // --- Test Case 5: Interactivity ---
+            const table5 = document.getElementById("interactive-table");
+            const searchInput = document.getElementById("table-search");
+
+            table5.columns = [
+                { key: "name", title: "Name", width: "1fr" },
+                { key: "role", title: "Role", width: "1fr" },
+                { key: "age", title: "Age", width: "80px", align: "center" },
+            ];
+
+            table5.data = [
+                { name: "John Doe", role: "Developer", age: 28 },
+                { name: "Jane Smith", role: "Designer", age: 34 },
+                { name: "Sam Wilson", role: "Manager", age: 45 },
+                { name: "Kate Bishop", role: "Developer", age: 22 },
+            ];
+
+            // Connect Input to Table Filter Method
+            searchInput.addEventListener("input", (e) => {
+                table5.filter(e.target.value);
+            });
+
+
+
+            const table = document.getElementById('expense-report');
+
+        // --- STEP 3: DATA FEEDING ---
+        // This structure matches the logic we added to NexusTable.js
+        const expenseData = [
+            {
+                isGroup: true,
+                groupTitle: "Expense Period: 12/01/2024 - 12/07/2024",
+                groupSummary: "Limit Available: <strong>$200</strong>",
+                
+                // Configuration for the INNER table (The brown header one)
+                childColumns: [
+                    { key: 'date', title: 'Date', width: '120px' },
+                    { key: 'type', title: 'Expense Types', width: '1fr' },
+                    { key: 'item', title: 'Expense Items', width: '1fr' },
+                    { key: 'code', title: 'Budget Code', width: '120px' },
+                    { key: 'paidBy', title: 'Paid By', width: '120px' },
+                    { key: 'receipt', title: 'Receipt', width: '120px' },
+                    { key: 'amount', title: 'Amount', width: '100px', type: 'currency', align: 'right' },
+                    { key: 'actions', title: '', width: '100px', type: 'action' } // Uses the placeholder icons
+                ],
+
+                // The actual expense rows
+                children: [
+                    { date: "12/02/2024", type: "Airfare", item: "Ticket Fare", code: "OZ-00-IS", paidBy: "Collabera", receipt: "None", amount: 100 },
+                    { date: "12/06/2024", type: "Airfare", item: "Ticket Fare", code: "OZ-00-IS", paidBy: "Employee", receipt: "Air Ticket", amount: 350 }
+                ],
+
+                // The Gray Footer Bar
+                footerHtml: `
+                    <span>Paid By Employee: $350.00</span>
+                    <span style="margin-left:20px">Paid By Collabera: $100.00</span>
+                `
+            }
+        ];
+
+        // Load it
+        table.data = expenseData;
+        </script>
+    </body>
+</html>

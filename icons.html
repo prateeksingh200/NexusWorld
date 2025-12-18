@@ -21,7 +21,7 @@
             padding: 1rem 2rem;
             display: flex;
             align-items: center;
-            gap: 3rem;
+            gap: 2rem; /* Reduced slightly to fit new item */
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
             margin-bottom: 2rem;
             flex-wrap: wrap;
@@ -31,6 +31,25 @@
             display: flex;
             align-items: center;
             gap: 1rem;
+        }
+
+        /* Styling for the new Back Button */
+        .back-link {
+            text-decoration: none;
+            color: var(--color-grays-800, #333);
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .back-link:hover {
+            background: var(--color-grays-100, #f4f5f6);
+            color: var(--color-primary-600, #000);
         }
 
         .toolbar-label {
@@ -97,13 +116,19 @@
 
         .color-swatch.active {
             border-color: var(--color-grays-800, #333);
-            box-shadow: 0 0 0 2px white inset; /* Creates a gap between border and color */
+            box-shadow: 0 0 0 2px white inset;
         }
     </style>
 </head>
 <body>
 
     <header class="nexus-toolbar">
+        
+        <div class="toolbar-group" style="margin-right: auto;">
+            <a href="index.html" class="back-link">
+                <span>&#8592;</span> Back
+            </a>
+        </div>
         
         <div class="toolbar-group">
             <label class="toolbar-label">Type</label>
@@ -146,24 +171,22 @@
     </main>
 
     <script src="src/js/icons/nexus-icon-wc.js"></script>
+    <script src="dist/icon-list.js"></script>
 
     <script>
         // --- 1. Data Source ---
-        const iconList = [
-            "ai-summary-doc", "alert-triangle", "arrow-down", "arrow-left",
-            "arrow-right", "arrow-up", "check-circle", "chevron-down",
-            "chevron-left", "chevron-right", "chevron-up", "client-business",
-            "client-finance", "client-tag", "inbox", "info", "lock", "log-in",
-            "log-out", "plus", "search", "settings", "sliders", "trash",
-            "user", "user-check", "user-circle", "user-cog", "user-lock",
-            "user-minus", "user-plus", "user-x", "users", "x-circle"
-        ];
+        // Uses the generated list from window.NEXUS_ICONS or falls back to empty
+        const iconList = window.NEXUS_ICONS || [];
+
+        if (iconList.length === 0) {
+            console.warn("⚠️ No icons found. Ensure you ran 'npm run build' to generate the icon-list.js file.");
+        }
 
         // --- 2. State Management ---
         const state = {
             type: 'outline',
-            size: 'var(--nxs-size-sm, 32px)', // Default to SM
-            color: 'var(--color-grays-900)'   // Default to Neutral
+            size: 'var(--nxs-size-sm, 32px)', 
+            color: 'var(--color-grays-900)'
         };
 
         // --- 3. DOM Elements ---
@@ -174,18 +197,15 @@
 
         // --- 4. Render Function ---
         function renderGrid() {
-            grid.innerHTML = ''; // Clear current grid
+            grid.innerHTML = ''; 
 
             iconList.forEach(name => {
                 const card = document.createElement('div');
                 card.className = 'nexus-icon-card';
-                // Apply color state to the card wrapper (icons inherit via currentColor)
                 card.style.color = state.color;
 
                 const usageString = `<nexus-icon name="${name}" type="${state.type}"></nexus-icon>`;
 
-                // Create the icon with inline styles for dynamic sizing
-                // Note: We deliberately override the default CSS size here based on toolbar selection
                 card.innerHTML = `
                     <nexus-icon 
                         name="${name}" 
@@ -198,7 +218,6 @@
                 // Click to Copy
                 card.addEventListener('click', () => {
                     navigator.clipboard.writeText(usageString);
-                    // Simple visual feedback
                     const originalText = card.querySelector('.nexus-icon-name').innerText;
                     card.querySelector('.nexus-icon-name').innerText = "Copied!";
                     setTimeout(() => {
@@ -211,34 +230,24 @@
         }
 
         // --- 5. Event Listeners ---
-
-        // Type Change
         typeSelect.addEventListener('change', (e) => {
             state.type = e.target.value;
             renderGrid();
         });
 
-        // Size Change
         sizeOptions.forEach(opt => {
             opt.addEventListener('click', () => {
-                // UI Toggle
                 sizeOptions.forEach(o => o.classList.remove('active'));
                 opt.classList.add('active');
-                
-                // State Update
                 state.size = opt.dataset.value;
                 renderGrid();
             });
         });
 
-        // Color Change
         colorOptions.forEach(opt => {
             opt.addEventListener('click', () => {
-                // UI Toggle
                 colorOptions.forEach(o => o.classList.remove('active'));
                 opt.classList.add('active');
-                
-                // State Update
                 state.color = opt.dataset.color;
                 renderGrid();
             });

@@ -1,0 +1,197 @@
+/* src/components/table.css */
+
+:host {
+    display: block;
+    width: 100%;
+    overflow: hidden; /* Container handles scroll */
+    font-family: var(--font-family-sans, sans-serif); /* Fallback to sans */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    --nexus-grid-cols: 1fr; /* Default to 1 column until JS sets it */
+    --row-height: 48px;
+}
+
+.nexus-table-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+    position: relative;
+}
+
+/* --- The Grid System --- */
+.nexus-header,
+.nexus-row {
+    display: grid;
+    /* The Magic: JS updates this variable to resize columns */
+    grid-template-columns: var(--nexus-grid-cols);
+    align-items: center;
+    padding: 0 1rem;
+}
+
+/* Sticky Header */
+.nexus-header {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    border-bottom: 2px solid #e0e0e0;
+    min-height: var(--row-height);
+    user-select: none;
+}
+
+/* Data Rows */
+.nexus-row {
+    min-height: var(--row-height);
+    border-bottom: 1px solid #f1f1f1;
+    transition: background-color 0.2s ease;
+}
+
+.nexus-row:hover {
+    background-color: #fcfcfc;
+}
+
+.nexus-cell {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0.5rem;
+}
+
+/* --- Expansion (Table-in-Table) Support --- */
+.nexus-row.expanded {
+    background-color: #f1f8ff; /* Highlight parent when open */
+    border-bottom: none;
+}
+
+.nexus-detail-row {
+    display: grid;
+    grid-column: 1 / -1; /* Spans full width */
+    background-color: #fafafa;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 1rem;
+    box-shadow: inset 0px 4px 6px -4px rgba(0,0,0,0.1);
+}
+
+/* --- Presets --- */
+:host([preset~="striped"]) .nexus-row:nth-of-type(odd) {
+    background-color: #fafafa;
+}
+
+:host([preset~="compact"]) {
+    --row-height: 32px;
+    font-size: 0.9rem;
+}
+
+/* Alignment Utilities */
+.nexus-cell.text-left { justify-self: start; text-align: left; }
+.nexus-cell.text-center { justify-self: center; text-align: center; }
+.nexus-cell.text-right { justify-self: end; text-align: right; }
+
+/* Built-in "Badge" Type support */
+.nexus-badge {
+    display: inline-block;
+    padding: 0.25em 0.6em;
+    font-size: 0.75em;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    background-color: #e2e8f0;
+    color: #475569;
+}
+
+/* Status-specific colors (Optional default theme) */
+.nexus-badge.success { background-color: #d1fae5; color: #065f46; } /* Green */
+.nexus-badge.warning { background-color: #fef3c7; color: #92400e; } /* Orange */
+.nexus-badge.danger  { background-color: #fee2e2; color: #b91c1c; } /* Red */
+
+/* Header Interactivity */
+.nexus-cell[role="columnheader"] {
+    cursor: pointer; /* Clickable */
+    position: relative;
+    padding-right: 1.5rem; /* Space for arrow */
+    transition: background-color 0.2s;
+}
+
+.nexus-cell[role="columnheader"]:hover {
+    background-color: #e9ecef;
+}
+
+/* Sort Indicators (CSS Triangles for zero-dependency) */
+.nexus-cell[role="columnheader"]::after {
+    content: '';
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 5px solid transparent;
+    opacity: 0.2; /* Faint by default */
+}
+
+/* Active Sort States */
+.nexus-cell[role="columnheader"].sort-asc::after {
+    border-bottom-color: #333; /* Up Arrow */
+    margin-top: -3px;
+    opacity: 1;
+}
+
+.nexus-cell[role="columnheader"].sort-desc::after {
+    border-top-color: #333; /* Down Arrow */
+    margin-top: 3px;
+    opacity: 1;
+}
+
+/* --- Grouping & Nesting Styles --- */
+
+/* The Parent "Group" Row */
+.nexus-group-row {
+    background-color: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+    display: flex; /* Flex is better for this header than Grid */
+    align-items: center;
+    padding: 1rem;
+    justify-content: space-between;
+}
+
+.nexus-group-row:hover {
+    background-color: #f8f9fa;
+}
+
+/* The Chevron Icon Rotation */
+.nexus-group-row .toggle-icon {
+    transition: transform 0.2s ease;
+    margin-right: 0.5rem;
+}
+.nexus-group-row.collapsed .toggle-icon {
+    transform: rotate(-90deg);
+}
+
+/* The Container for the Child Table */
+.nexus-detail-container {
+    display: grid; /* Use Grid to span full width */
+    grid-column: 1 / -1;
+    background-color: #fff;
+    padding: 1rem 2rem; /* Indent the child table slightly */
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* The Footer/Total Row */
+.nexus-footer-row {
+    background-color: #e2e8f0; /* The gray bar color */
+    padding: 1rem;
+    font-weight: 700;
+    text-align: right;
+    color: #2d3748;
+    border-radius: 0 0 8px 8px; /* Rounded corners at bottom */
+    display: flex;
+    justify-content: flex-end;
+    gap: 2rem;
+}
